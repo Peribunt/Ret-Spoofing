@@ -1,8 +1,6 @@
 #include <windows.h>
 #include <cstdio>
 
-#define MAGIC_SPOOF_RETADDR_NUMBER 0xDEADBEEF00000001
-
 #define SPOOFER_NOINLINE __declspec( noinline )
 #define SPOOFER_INLINE __forceinline
 
@@ -11,6 +9,14 @@ system( "pause" )
 
 #define CONSOLE_LOG( Fmt, ... ) \
 printf( "[!] " __FUNCTION__ ": " Fmt "\n", ##__VA_ARGS__ )
+
+#pragma code_seg( push, ".text" )
+__declspec( allocate( ".text" ) )
+BYTE JMP_RBX_TEST[] = 
+{ 
+	0xFF, 0xE3 
+};
+#pragma code_seg( pop )
 
 namespace ReturnSpoofer
 {
@@ -42,7 +48,7 @@ namespace ReturnSpoofer
 LONG main( VOID )
 {
 	DWORD Result =
-		ReturnSpoofer::DoSpoofCall<DWORD>( MessageBoxA, (PBYTE)(MessageBoxA)-1,
+		ReturnSpoofer::DoSpoofCall<DWORD>( MessageBoxA, (PBYTE)JMP_RBX_TEST,
 			NULL, "Hello World", "Spoofed call", NULL );
 
 	//
