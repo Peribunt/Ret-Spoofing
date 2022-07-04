@@ -1,9 +1,9 @@
 .code
 
 InitSpoofCall PROC
-  movq xmm15, rdx
-  pinsrq xmm15, rcx, 1
-  ret
+	movq xmm15, rdx
+	pinsrq xmm15, rcx, 1
+	ret
 InitSpoofCall ENDP
 
 SpoofCall PROC
